@@ -5,10 +5,14 @@ using UnityEngine;
 public class Tuberias : MonoBehaviour {
 
     [SerializeField]private int speed = 3;
-	
+    [Header ("LIMITE DE LAS TUBERIAS SUPERIOR")]
+    [SerializeField] float LimiteSup = 2;
+    [Header("LIMITE DE LAS TUBERIAS INFERIOR")]
+    [SerializeField] float LimiteInf = -2;
+
     void Start() {
 
-        float factorPosition = Random.Range(-2, 2);
+        float factorPosition = Random.Range(LimiteInf, LimiteSup);
         this.transform.position = new Vector3(transform.position.x, transform.position.y + factorPosition, transform.position.z);
     }
 	

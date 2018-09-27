@@ -9,28 +9,36 @@ public class PajaroZombi : MonoBehaviour {
     [SerializeField] ParticleSystem prefabExplosion;
     [SerializeField] Text marcadorPuntos;
     [SerializeField] float fuerza = 10f;
-    private int puntos = 0;
+    [SerializeField] AudioSource audioBoom;
+    [SerializeField] AudioSource audioJump;
+    [SerializeField] AudioSource audioPoint;
+
     private Rigidbody rb;
-
-    //private AudioSource();
-
-	void Start () {
+    private int puntos = 0;
+    
+    void Start () {
         GameConfig.ArrancaJuego();
         rb = GetComponent<Rigidbody>();
-        ActualizarMarcador();
-        //AudioSource = GetComponent<AudioSource>();
+        ActualizarMarcador();        
 	}
 	
 	void Update () {
 		if (Input.GetKeyDown("space"))
         {
             rb.AddForce(transform.up * fuerza);
+            //Sonido Salto
+            audioJump.Play();
         }
 	}
 
     private void ActualizarMarcador()
     {
         marcadorPuntos.text = "Score: " + puntos.ToString();
+        //Sonido Punto
+        if (puntos > 0)
+        {
+            audioPoint.Play();
+        }        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -41,15 +49,18 @@ public class PajaroZombi : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        //SONIDO COLISION
-        //AudioSource
-        
+        //Sonido explosion
+        audioBoom.Play();
+
         //CREANDO PARTICULAS
         Instantiate(prefabExplosion, transform.position, Quaternion.identity);
+
         //DESACTIVAR RENDER
         gameObject.SetActive(false);
+
         //PARAR TUBERIAS
         GameConfig.ParaJuego();
+
         //LLAMAR A FINALIZAR LA PARTIDA (TRAS 1 seg)
         Invoke("FinalizarPartida", 3f);    
     }
